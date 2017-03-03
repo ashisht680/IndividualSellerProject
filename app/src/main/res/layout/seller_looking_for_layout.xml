@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_toolbar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/ll_employee"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@color/toolbar_color">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/hire"
+                    android:scaleType="centerCrop"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_employee"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Hire\nEmployees"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ll_web"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@color/toolbar_color">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/web"
+                    android:scaleType="centerCrop"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_web"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Web\nServices"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/ll_graphic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@color/toolbar_color">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/graphic"
+                    android:scaleType="centerCrop"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_graphic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Graphic\nDesigning"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ll_financial"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@color/toolbar_color">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/finance"
+                    android:scaleType="centerCrop"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_financial"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="ERP/CRM\nSoftware"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

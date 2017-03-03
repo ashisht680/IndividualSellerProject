@@ -29,7 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.javinindia.individualsellerpartner.activity.SplashActivity"
+            android:name="com.javinindia.individualsellerpartner.activity.SplashActivitySeller"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,22 +38,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.javinindia.individualsellerpartner.activity.LoginActivity"
+            android:name="com.javinindia.individualsellerpartner.activity.LoginActivitySeller"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ZingScannerActivity"
+            android:name=".activity.SellerZingScannerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.javinindia.individualsellerpartner.activity.CustomPhotoGalleryActivity"
+            android:name="com.javinindia.individualsellerpartner.activity.SellerCustomPhotoGalleryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <service android:name="com.javinindia.individualsellerpartner.notification.MyAndroidFirebaseMsgService">
+        <service android:name="com.javinindia.individualsellerpartner.notificationSeller.MyAndroidFirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.javinindia.individualsellerpartner.notification.MyAndroidFirebaseInstanceIdService">
+        <service android:name="com.javinindia.individualsellerpartner.notificationSeller.MyAndroidFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

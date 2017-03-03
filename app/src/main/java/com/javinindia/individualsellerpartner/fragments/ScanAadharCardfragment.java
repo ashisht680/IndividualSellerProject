@@ -25,11 +25,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,19 +49,18 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.javinindia.individualsellerpartner.BuildConfig;
 import com.javinindia.individualsellerpartner.R;
-import com.javinindia.individualsellerpartner.activity.ZingScannerActivity;
-import com.javinindia.individualsellerpartner.apiparsing.AadharSacnParsingresponse.AadharResponse;
-import com.javinindia.individualsellerpartner.constant.Constants;
-import com.javinindia.individualsellerpartner.font.FontAsapRegularSingleTonClass;
-import com.javinindia.individualsellerpartner.preference.SharedPreferencesManager;
-import com.javinindia.individualsellerpartner.utility.CheckConnection;
+import com.javinindia.individualsellerpartner.activity.SellerZingScannerActivity;
+import com.javinindia.individualsellerpartner.Sellerapiparsing.AadharSacnParsingresponse.AadharResponse;
+import com.javinindia.individualsellerpartner.constantSeller.Constants;
+import com.javinindia.individualsellerpartner.fontSeller.FontAsapRegularSingleTonClass;
+import com.javinindia.individualsellerpartner.preferenceSeller.SharedPreferencesManager;
+import com.javinindia.individualsellerpartner.utilitySeller.CheckConnection;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -79,7 +76,7 @@ import static android.Manifest.permission.CAMERA;
  * Created by Ashish on 16-02-2017.
  */
 
-public class ScanAadharCardfragment extends BaseFragment implements View.OnClickListener,CheckConnectionFragment.OnCallBackInternetListener {
+public class ScanAadharCardfragment extends SellerBaseFragment implements View.OnClickListener,SellerCheckConnectionFragment.OnCallBackInternetListener {
     private AppCompatTextView txtID, txtName, txtGender, txtYOB, txtCO, txtLM, txtVTC, txtPO, txtDist, txtState, txtPC;
     String result;
     LinearLayout llAadharDetail;
@@ -241,7 +238,7 @@ public class ScanAadharCardfragment extends BaseFragment implements View.OnClick
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.visit_customer_layout;
+        return R.layout.scan_aadhar_layout;
     }
 
     @Override
@@ -287,7 +284,7 @@ public class ScanAadharCardfragment extends BaseFragment implements View.OnClick
                 txtState.setText("");
                 txtPC.setText("");
                 SharedPreferencesManager.setAadhar(activity, null);
-                Intent splashIntent = new Intent(activity, ZingScannerActivity.class);
+                Intent splashIntent = new Intent(activity, SellerZingScannerActivity.class);
                 startActivity(splashIntent);
                 break;
             case R.id.imgProfilePic:
@@ -305,7 +302,7 @@ public class ScanAadharCardfragment extends BaseFragment implements View.OnClick
                 if (CheckConnection.haveNetworkConnection(activity)) {
                     methodUpdateView();
                 } else {
-                    CheckConnectionFragment fragment = new CheckConnectionFragment();
+                    SellerCheckConnectionFragment fragment = new SellerCheckConnectionFragment();
                     fragment.setMyCallBackInternetListener(this);
                     callFragmentMethod(fragment, this.getClass().getSimpleName(), R.id.container);
                 }

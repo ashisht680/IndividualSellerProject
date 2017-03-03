@@ -13,14 +13,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.javinindia.individualsellerpartner.R;
-import com.javinindia.individualsellerpartner.font.FontAsapBoldSingleTonClass;
-import com.javinindia.individualsellerpartner.font.FontAsapRegularSingleTonClass;
+import com.javinindia.individualsellerpartner.fontSeller.FontAsapBoldSingleTonClass;
+import com.javinindia.individualsellerpartner.fontSeller.FontAsapRegularSingleTonClass;
 
 /**
  * Created by Ashish on 14-12-2016.
  */
 
-public class AboutApplicationFragments extends BaseFragment {
+public class AboutApplicationFragments extends SellerBaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
