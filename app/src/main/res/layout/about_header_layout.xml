@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black_transparent_color">
+    >
 
     <RelativeLayout
         android:id="@+id/rlBanner"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="180dp"
+        android:background="@drawable/button_border_white">
 
         <ImageView
             android:id="@+id/imgBannerAbout"
@@ -104,7 +105,8 @@
             android:lines="1"
             android:text=""
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txtOffersAbout"
@@ -112,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/llButton"
             android:layout_marginLeft="5dp"
-
+            android:layout_marginRight="1dp"
             android:background="@color/highlight_color"
             android:lines="1"
             android:padding="2dp"
@@ -239,6 +241,7 @@
             android:gravity="left"
             android:paddingLeft="10dp"
             android:text="Running Offers"
+            android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold" />

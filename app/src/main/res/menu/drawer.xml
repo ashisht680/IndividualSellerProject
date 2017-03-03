@@ -12,6 +12,11 @@
             android:icon="@drawable/ic_home_black"
             android:title="Home"/>
         <item
+            android:id="@+id/drawer_document"
+            android:checkable="false"
+            android:icon="@android:drawable/stat_sys_upload_done"
+            android:title="Upload Aadhar"/>
+        <item
             android:id="@+id/drawer_addCategory"
             android:checkable="false"
             android:icon="@drawable/ic_playlist_add_white"

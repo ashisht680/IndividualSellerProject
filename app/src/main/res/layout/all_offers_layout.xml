@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@drawable/splash"
     android:orientation="vertical">
 
     <include layout="@layout/common_toolbar_layout" />
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="@android:color/white"
             android:text="You have not published any offer."
             android:visibility="gone" />
 

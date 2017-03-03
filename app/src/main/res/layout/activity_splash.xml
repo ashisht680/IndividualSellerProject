@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wish_zee_logo"
-        android:text="Ample Partner"
+        android:text="@string/app_name"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="24dp"

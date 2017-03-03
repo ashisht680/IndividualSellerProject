@@ -42,7 +42,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="40dp"
                 android:layout_toRightOf="@+id/imgShopLogoOffer"
-                android:singleLine="true"
+                android:lines="1"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
@@ -56,7 +56,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="40dp"
                 android:layout_toRightOf="@+id/imgShopLogoOffer"
-                android:singleLine="true"
+                android:lines="1"
                 android:text=""
                 android:textSize="12sp" />
 
@@ -68,7 +68,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/imgShopLogoOffer"
-                android:singleLine="true"
+                android:lines="1"
                 android:text=""
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="19sp" />
@@ -80,7 +80,7 @@
                 android:layout_below="@+id/txtOfferTitle"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/imgShopLogoOffer"
-                android:singleLine="true"
+                android:lines="1"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
@@ -92,7 +92,7 @@
                 android:layout_below="@+id/txtOfferCategoryItem"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/imgShopLogoOffer"
-                android:singleLine="true"
+                android:lines="1"
                 android:text=""
                 android:textSize="12sp" />
 

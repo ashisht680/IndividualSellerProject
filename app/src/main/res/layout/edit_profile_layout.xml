@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@drawable/splash"
     android:orientation="vertical">
 
     <include layout="@layout/common_toolbar_layout" />
@@ -88,7 +88,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@android:color/white">
 
-                    <android.support.v7.widget.AppCompatEditText
+                   <!-- <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/etStoreName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                         android:hint="Store name"
                         android:padding="5dp"
                         android:textColor="@android:color/black"
-                        android:textSize="13sp" />
+                        android:textSize="13sp" />-->
 
                     <!--  <RelativeLayout
                           android:id="@+id/rlEdit"
@@ -409,7 +409,7 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -455,7 +455,7 @@
                         android:textColorHint="@color/black_transparent_color"
                         android:textSize="12dp" />
                 </RelativeLayout>
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -474,7 +474,7 @@
                         android:background="@android:color/white"
                         android:gravity="center|left"
                         android:paddingLeft="5dp"
-                        android:text="Store no."
+                        android:text="Address"
                         android:textColor="@color/blue_button_color"
                         android:textSize="12dp" />
 
@@ -493,9 +493,8 @@
                         android:layout_toRightOf="@+id/img7"
                         android:background="@color/toolbar_color"
                         android:gravity="center|left"
-                        android:hint="store number"
+                        android:hint="address"
                         android:lines="1"
-                        android:maxLength="25"
                         android:textColor="@android:color/white"
                         android:textColorHint="@color/black_transparent_color"
                         android:textSize="12dp" />
@@ -519,7 +518,7 @@
                         android:background="@android:color/white"
                         android:gravity="center|left"
                         android:paddingLeft="5dp"
-                        android:text="Floor no."
+                        android:text="Pincode"
                         android:textColor="@color/blue_button_color"
                         android:textSize="12dp" />
 
@@ -538,15 +537,16 @@
                         android:layout_toRightOf="@+id/img8"
                         android:background="@color/toolbar_color"
                         android:gravity="center|left"
-                        android:hint="floor number"
-                        android:maxLength="25"
+                        android:hint="pincode"
+                        android:maxLength="6"
+                        android:inputType="number"
                         android:lines="1"
                         android:textColor="@android:color/white"
                         android:textColorHint="@color/black_transparent_color"
                         android:textSize="12dp" />
                 </RelativeLayout>
             </LinearLayout>
-
+<!--
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -629,7 +629,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- <LinearLayout
+             <LinearLayout
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_marginTop="5dp">
@@ -688,11 +688,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/black"
+                android:background="@android:color/white"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="UPDATE"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/black" />
         </LinearLayout>
     </ScrollView>
 
