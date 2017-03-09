@@ -344,11 +344,11 @@ public class AboutAdaptar extends RecyclerView.Adapter<AboutAdaptar.ViewHolder> 
             }
 
             if (!TextUtils.isEmpty(rating) && !rating.equals("0")) {
-                viewHolder.ratingBarAbout.setRating(Float.valueOf(rating));
-                viewHolder.txtRatingAbout.setText("Rating: " + rating + "/5");
+                viewHolder.ratingBarAbout.setRating(Float.valueOf("3.5"));
+                viewHolder.txtRatingAbout.setText("Rating: 3.5/5");
             } else {
-                viewHolder.ratingBarAbout.setRating(Float.valueOf("0"));
-                viewHolder.txtRatingAbout.setText("Rating: 0/5");
+                viewHolder.ratingBarAbout.setRating(Float.valueOf("3.5"));
+                viewHolder.txtRatingAbout.setText("Rating: 3.5/5");
             }
             viewHolder.btnEditProfile.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,6 +1,7 @@
 package com.javinindia.individualsellerpartner.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -14,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -57,9 +59,11 @@ import com.javinindia.individualsellerpartner.utilitySeller.Utility;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -389,18 +393,6 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                     Toast.makeText(activity, "Select State first", Toast.LENGTH_LONG).show();
                 }
                 break;
-            /*case R.id.etMall:
-                if (!TextUtils.isEmpty(etCity.getText())) {
-                    methodMallList();
-                } else {
-                    Toast.makeText(activity, "Select City first", Toast.LENGTH_LONG).show();
-                }
-                break;*/
-          /*  case R.id.txtAddNewCategory:
-                SellerListShopProductCategoryFragment categoryFragment = new SellerListShopProductCategoryFragment();
-                categoryFragment.setMyCallBackCategoryListener(this);
-                callFragmentMethod(categoryFragment, this.getClass().getSimpleName(),R.id.navigationContainer);
-                break;*/
         }
     }
 
@@ -810,10 +802,8 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
             public void onClick(DialogInterface dialog, int item) { // pick from
                 // camera
                 if (item == 0) {
-
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp1.jpg");
-                    mImageCaptureUri = Uri.fromFile(f);
+                    mImageCaptureUri = Uri.fromFile(getOutputMediaFile());
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
                     startActivityForResult(intent, PICK_FROM_CAMERA);
 
@@ -827,6 +817,20 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
 
         dialog = builder.create();
     }
+
+    private static File getOutputMediaFile() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "CameraDemo");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+    }
+
 
     public class CropOptionAdapter extends ArrayAdapter<CropOption> {
         private ArrayList<CropOption> mOptions;
@@ -868,39 +872,26 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != activity.RESULT_OK)
-            return;
-
-        switch (requestCode) {
-            case PICK_FROM_CAMERA:
-
-                doCrop();
-
-                break;
-
-            case PICK_FROM_FILE:
-
-                // After selecting image from files, save the selected path
-                mImageCaptureUri = data.getData();
-                doCrop();
-                break;
-
-            case CROP_FROM_CAMERA:
-                try {
-                    if (outPutFile.exists()) {
-                        photo = decodeFile(outPutFile.getAbsolutePath());
-
-                        imgProfilePicNotFound.setImageBitmap(photo);
-                        imgProfilePic.setImageBitmap(photo);
-                    } else {
-                        Toast.makeText(activity, "Error while save image", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (requestCode == PICK_FROM_FILE && resultCode == Activity.RESULT_OK && null != data) {
+            mImageCaptureUri = data.getData();
+            doCrop();
+        } else if (requestCode == PICK_FROM_CAMERA && resultCode == Activity.RESULT_OK) {
+            doCrop();
+        } else if (requestCode == CROP_FROM_CAMERA) {
+            try {
+                if (outPutFile.exists()) {
+                    photo = decodeFile(outPutFile.getAbsolutePath());
+                    imgProfilePicNotFound.setImageBitmap(photo);
+                    imgProfilePic.setImageBitmap(photo);
+                } else {
+                    Toast.makeText(activity, "Error while save image", Toast.LENGTH_SHORT).show();
                 }
-                break;
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+
     }
 
     public Bitmap decodeFile(String filePath) {

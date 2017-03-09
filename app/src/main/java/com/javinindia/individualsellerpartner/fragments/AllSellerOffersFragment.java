@@ -202,7 +202,7 @@ public class AllSellerOffersFragment extends SellerBaseFragment implements Offer
         String brandPic = detailsList.getOfferBrandDetails().getBrandLogo().trim();
         String shopName = detailsList.getOfferShopDetails().getShopName().trim();
         String mallName = detailsList.getOfferMallDetails().getMallName().trim();
-        String offerRating = "4";
+        String offerRating = "3.5";
         String offerPic = detailsList.getOfferDetails().getOfferBanner().trim();
         String offerTitle = detailsList.getOfferDetails().getOfferTitle().trim();
         String offerCategory = detailsList.getOfferDetails().getOfferCategory();

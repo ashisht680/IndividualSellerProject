@@ -169,9 +169,9 @@ public class SellerNavigationAboutFragment extends SellerBaseFragment implements
                 try {
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Ample App");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Sale50 Partner");
                     String sAux = "\nLet me recommend you this application\n\n";
-                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.javinindia.citymallsbusiness\n\n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.javinindia.individualsellerpartner\n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "choose one"));
                 } catch (Exception e) {
@@ -198,7 +198,7 @@ public class SellerNavigationAboutFragment extends SellerBaseFragment implements
     public void dialogBox() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle("Logout");
-        alertDialogBuilder.setMessage("Thanks for visiting Ample Partner! Be back soon!");
+        alertDialogBuilder.setMessage("Thanks for visiting Sale50 Partner! Be back soon!");
         alertDialogBuilder.setPositiveButton("Ok!",
                 new DialogInterface.OnClickListener() {
 
@@ -561,7 +561,7 @@ public class SellerNavigationAboutFragment extends SellerBaseFragment implements
         String brandPic = detailsList.getOfferBrandDetails().getBrandLogo().trim();
         String shopName = detailsList.getOfferShopDetails().getShopName().trim();
         String mallName = detailsList.getOfferMallDetails().getMallName().trim();
-        String offerRating = "4";
+        String offerRating = "3.5";
         String offerPic = detailsList.getOfferDetails().getOfferBanner().trim();
         String offerTitle = detailsList.getOfferDetails().getOfferTitle().trim();
         String offerCategory = detailsList.getOfferDetails().getOfferCategory();

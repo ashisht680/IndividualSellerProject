@@ -152,7 +152,7 @@ public class SellerOfferPostFragment extends SellerBaseFragment implements View.
             txtSubcategory.setText(Utility.fromHtml("on " + offerCategory + "(" + offerSubCategory + ")"));
 
         if (!TextUtils.isEmpty(offerStartDate) && !TextUtils.isEmpty(offerCloseDate))
-            txtOfferDate.setText(offerStartDate + " till " + offerCloseDate);
+            txtOfferDate.setText("Valid from "+offerStartDate + " till " + offerCloseDate);
 
         if (!TextUtils.isEmpty(shopOpenTime) && !TextUtils.isEmpty(shopCloseTime))
             txtShopTiming.setText(shopOpenTime + " to " + shopCloseTime);
