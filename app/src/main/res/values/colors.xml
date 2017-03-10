@@ -7,11 +7,12 @@
     <color name="wow_gray">#757575</color>
     <color name="yellow_color">#F2E230</color>
     <!--  <color name="toolbar_color">#1da6b9</color>-->
-    <color name="toolbar_color">#ff6326</color>
+    <color name="toolbar_color">#f23b42</color>
     <!--<color name="background_color">#ed6269</color>-->
     <color name="background_color">#d6ecf9</color>
     <color name="highlight_color">#4a4a4a</color>
     <color name="black_transparent_color">#99000000</color>
+    <color name="white_transparent_color">#99ffffff</color>
     <!--<color name="direction_button_color">#a1161d</color>-->
     <color name="blue_button_color">#1da6b9</color>
     <color name="offer_green_color">#38D15F</color>
