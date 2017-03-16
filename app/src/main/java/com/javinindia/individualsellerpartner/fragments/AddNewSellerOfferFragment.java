@@ -49,6 +49,7 @@ import com.javinindia.individualsellerpartner.R;
 import com.javinindia.individualsellerpartner.Sellerapiparsing.brandparsing.Brandresponse;
 import com.javinindia.individualsellerpartner.Sellerapiparsing.offerCategoryParsing.OfferCategoryresponse;
 import com.javinindia.individualsellerpartner.constantSeller.Constants;
+import com.javinindia.individualsellerpartner.fontSeller.FontAsapBoldSingleTonClass;
 import com.javinindia.individualsellerpartner.fontSeller.FontAsapRegularSingleTonClass;
 import com.javinindia.individualsellerpartner.preferenceSeller.SharedPreferencesManager;
 import com.javinindia.individualsellerpartner.utilitySeller.Utility;
@@ -79,9 +80,9 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
 
 
     // CheckBox checkboxPercent, checkboxPrise;
-    AppCompatTextView txtChooseCategory, txtAddProductImages, btnStartTime, btnEndTime, txtChooseSubCategory, txtChooseBrand,
+    AppCompatTextView txtChooseCategory, txtAddProductImages, btnStartTime, btnEndTime, txtChooseSubCategory,
             txtChoosePercent, txtAdditional, txtEnterPercentTitle, txtOr, txtEnterPriceTitle, txtTitle, txtTitleDisc;
-    AppCompatEditText etProductTitle, etProductDescription, etPercentage, etActualPrice, etDiscountPrice;
+    AppCompatEditText etProductTitle, etProductDescription, etPercentage, etActualPrice, etDiscountPrice, txtChooseBrand;
     AppCompatButton btnSubmitOffer;
 
     private RequestQueue requestQueue;
@@ -96,6 +97,8 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
     String catId;
     String subCatId;
     String brandId;
+
+    String DefaultBrand="Brands";
 
     private Uri mImageCaptureUri;
     private ImageView mImageView;
@@ -188,7 +191,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
         txtEnterPriceTitle = (AppCompatTextView) view.findViewById(R.id.txtEnterPriceTitle);
         txtEnterPriceTitle.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         txtTitle = (AppCompatTextView) view.findViewById(R.id.txtTitle);
-        txtTitle.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
+        txtTitle.setTypeface(FontAsapBoldSingleTonClass.getInstance(activity).getTypeFace());
         txtTitleDisc = (AppCompatTextView) view.findViewById(R.id.txtTitleDisc);
         txtTitleDisc.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         //horizontalScrollView = (HorizontalScrollView) view.findViewById(R.id.scroll1);
@@ -197,7 +200,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
         txtChooseCategory.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         txtChooseSubCategory = (AppCompatTextView) view.findViewById(R.id.txtChooseSubCategory);
         txtChooseSubCategory.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
-        txtChooseBrand = (AppCompatTextView) view.findViewById(R.id.txtChooseBrand);
+        txtChooseBrand = (AppCompatEditText) view.findViewById(R.id.txtChooseBrand);
         txtChooseBrand.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         txtAddProductImages = (AppCompatTextView) view.findViewById(R.id.txtAddProductImages);
         txtAddProductImages.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
@@ -308,6 +311,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
                 }else {
                     dialog.show();
+                    dialog.show();
                 }
                 break;
         }
@@ -317,7 +321,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
     private void methodSubmit() {
         if (!txtChooseCategory.getText().equals("Choose category")) {
             if (!txtChooseSubCategory.getText().equals("Choose subcategory")) {
-                if (!txtChooseBrand.getText().equals("Choose Brand")) {
+                if (!TextUtils.isEmpty(txtChooseBrand.getText().toString())) {
                     if (!etProductTitle.getText().toString().trim().equals("")) {
                         if (!etProductDescription.getText().toString().trim().equals("")) {
                             if (!btnStartTime.getText().equals("Start date")) {
@@ -351,7 +355,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
                         Toast.makeText(activity, "Please write a suitable title for your offer.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(activity, "Select Brand first", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Select "+DefaultBrand+" first", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(activity, "Select Subcategory first", Toast.LENGTH_LONG).show();
@@ -545,13 +549,28 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
                                     if (categoryList != null && categoryList.size() > 0) {
                                         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
                                         builder.setTitle("Select Category");
+                                        builder.setPositiveButton("ADD NEW", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                AddSellerSubCatFragment fragment1 = new AddSellerSubCatFragment();
+                                                fragment1.setMyCallBackCategoryListener(AddNewSellerOfferFragment.this);
+                                                callFragmentMethod(fragment1, this.getClass().getSimpleName(),R.id.container);
+                                            }
+                                        });
                                         builder.setNegativeButton(android.R.string.cancel, null);
                                         builder.setItems(categoryArray, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int item) {
                                                 // Do something with the selection
                                                 txtChooseCategory.setText(categoryArray[item]);
                                                 txtChooseSubCategory.setText("Choose subcategory");
-                                                txtChooseBrand.setText("Choose Brand");
+                                                if (categoryArray[item].equals("Books")){
+                                                    txtChooseBrand.setHint("Choose Authors");
+                                                    DefaultBrand = "Authors";
+                                                }else {
+                                                    txtChooseBrand.setHint("Choose Brand");
+                                                    DefaultBrand = "Brands";
+                                                }
+                                                txtChooseBrand.setText("");
                                                 int index = Arrays.asList(categoryArray).indexOf(categoryArray[item]);
                                                 catId = countryMasterApiParsing.getSetShopCategoryDetailsArrayList().get(index).getId();
                                                 dialog.dismiss();
@@ -649,6 +668,12 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
                                         builder.setItems(suCatArray, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int item) {
                                                 txtChooseSubCategory.setText(suCatArray[item]);
+                                                if (txtChooseCategory.getText().equals("Books")){
+                                                    txtChooseBrand.setHint("Choose Authors");
+                                                }else {
+                                                    txtChooseBrand.setHint("Choose Brand");
+                                                }
+                                                txtChooseBrand.setText("");
                                                 int index = Arrays.asList(suCatArray).indexOf(suCatArray[item]);
                                                 subCatId = cityMasterParsing.getSetShopCategoryDetailsArrayList().get(index).getId().trim();
                                                 dialog.dismiss();

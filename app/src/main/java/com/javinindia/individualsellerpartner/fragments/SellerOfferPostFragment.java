@@ -129,7 +129,7 @@ public class SellerOfferPostFragment extends SellerBaseFragment implements View.
             double actual = Double.parseDouble(offerActualPrice);
             double discount = Double.parseDouble(offerDiscountPr);
             int percent = (int) (100 - (discount * 100.0f) / actual);
-            txtOfferPercentage.setText(offerPercentType + "\t" + percent + "% off");
+            txtOfferPercentage.setText(offerPercentType + " " + percent + "% off");
         } else if (TextUtils.isEmpty(offerPercentType) && TextUtils.isEmpty(offerPercentage)) {
             if (!TextUtils.isEmpty(offerActualPrice) && !TextUtils.isEmpty(offerDiscountPr)) {
                 double actual = Double.parseDouble(offerActualPrice);

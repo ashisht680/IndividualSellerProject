@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_border_red_fill_white"
+                android:drawableRight="@android:drawable/arrow_down_float"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Category"
@@ -35,21 +36,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_border_red_fill_white"
+                android:drawableRight="@android:drawable/arrow_down_float"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Subcategory"
                 android:textColor="@color/toolbar_color"
                 android:textSize="20sp" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/txtSelectBrand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:background="@drawable/button_border_red_fill_white"
+                android:drawableRight="@android:drawable/arrow_down_float"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Brands"
+                android:hint="Brands"
+                android:textColorHint="@color/toolbar_color"
                 android:textColor="@color/toolbar_color"
                 android:textSize="20sp" />
 

@@ -44,11 +44,11 @@ import java.util.Map;
 /**
  * Created by Ashish on 03-10-2016.
  */
-public class AddSellerSubCatFragment extends SellerBaseFragment implements View.OnClickListener,SellerCheckConnectionFragment.OnCallBackInternetListener {
+public class AddSellerSubCatFragment extends SellerBaseFragment implements View.OnClickListener, SellerCheckConnectionFragment.OnCallBackInternetListener {
     private RequestQueue requestQueue;
-    AppCompatTextView txtSelectCategory, txtSelectSubCat, txtSelectBrand;
+    AppCompatTextView txtSelectCategory, txtSelectSubCat;
     AppCompatButton btnSubmit;
-    AppCompatEditText etBrand;
+    AppCompatEditText etBrand,txtSelectBrand;
 
     public ArrayList<String> categoryList = new ArrayList<>();
     String categoryArray[] = null;
@@ -61,6 +61,7 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
     String catId;
     String subCatId;
     String BrandID;
+    String DefaultBrand="Brands";
 
     private OnCallBackCAtegoryListener callbackCat;
 
@@ -127,7 +128,7 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
         txtSelectCategory.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         txtSelectSubCat = (AppCompatTextView) view.findViewById(R.id.txtSelectSubCat);
         txtSelectSubCat.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
-        txtSelectBrand = (AppCompatTextView) view.findViewById(R.id.txtSelectBrand);
+        txtSelectBrand = (AppCompatEditText) view.findViewById(R.id.txtSelectBrand);
         txtSelectBrand.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         btnSubmit = (AppCompatButton) view.findViewById(R.id.btnSubmit);
         btnSubmit.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
@@ -182,14 +183,14 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
                 if (CheckConnection.haveNetworkConnection(activity)) {
                     if (!txtSelectCategory.getText().equals("Category")) {
                         if (!txtSelectSubCat.getText().equals("Subcategory")) {
-                            if (!txtSelectBrand.getText().equals("Brands") && !etBrand.getText().toString().equals("")) {
-                                Toast.makeText(activity, "Please either select brand or type brand.", Toast.LENGTH_LONG).show();
-                            } else if (!txtSelectBrand.getText().equals("Brands") && etBrand.getText().toString().equals("")) {
+                            if (!TextUtils.isEmpty(txtSelectBrand.getText().toString())  && !etBrand.getText().toString().equals("")) {
+                                Toast.makeText(activity, "Please either select "+DefaultBrand+" or type "+DefaultBrand+".", Toast.LENGTH_LONG).show();
+                            } else if (!TextUtils.isEmpty(txtSelectBrand.getText().toString())  && etBrand.getText().toString().equals("")) {
                                 methodSubmit();
-                            } else if (txtSelectBrand.getText().equals("Brands") && !etBrand.getText().toString().equals("")) {
+                            } else if (TextUtils.isEmpty(txtSelectBrand.getText().toString()) && !etBrand.getText().toString().equals("")) {
                                 methodSubmit();
                             } else {
-                                Toast.makeText(activity, "Select Brand or write brand please", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity,  "Please either select "+DefaultBrand+" or type "+DefaultBrand+".", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(activity, "Select Subcategory first", Toast.LENGTH_LONG).show();
@@ -298,13 +299,13 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
                                         d.show();
                                     }
                                 } else {
-                                    showDialogMethod("There are no Brand under this category");
+                                    showDialogMethod("There are no "+DefaultBrand+" under this category");
                                 }
                             } else {
-                                showDialogMethod("There are no Brand under this category");
+                                showDialogMethod("There are no "+DefaultBrand+" under this category");
                             }
                         } else {
-                            showDialogMethod("There are no Brand under this category");
+                            showDialogMethod("There are no "+DefaultBrand+" under this category");
                         }
 
                     }
@@ -383,11 +384,11 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
                 params.put("shopCatId", catId);
                 params.put("shopSubCatId", subCatId);
 
-                if (!txtSelectBrand.getText().equals("Brands") && etBrand.getText().toString().trim().equals("")) {
+                if (!TextUtils.isEmpty(txtSelectBrand.getText().toString()) && etBrand.getText().toString().trim().equals("")) {
                     params.put("brands", BrandID);
                     params.put("newbrand", "na");
 
-                } else if (txtSelectBrand.getText().equals("Brands") && !etBrand.getText().toString().trim().equals("")) {
+                } else if (TextUtils.isEmpty(txtSelectBrand.getText().toString()) && !etBrand.getText().toString().trim().equals("")) {
                     params.put("brands", "na");
                     params.put("newbrand", etBrand.getText().toString().trim());
                 }
@@ -433,7 +434,15 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
                                             public void onClick(DialogInterface dialog, int item) {
                                                 txtSelectCategory.setText(categoryArray[item]);
                                                 txtSelectSubCat.setText("Subcategory");
-                                                txtSelectBrand.setText("Brands");
+                                                if (categoryArray[item].equals("Books")) {
+                                                    txtSelectBrand.setHint("Authors");
+                                                    etBrand.setHint("Type Authors Name");
+                                                    DefaultBrand = "Authors";
+                                                } else {
+                                                    txtSelectBrand.setHint("Brands");
+                                                    etBrand.setHint("Type Brand Name");
+                                                    DefaultBrand = "Brands";
+                                                }
                                                 int index = Arrays.asList(categoryArray).indexOf(categoryArray[item]);
                                                 catId = countryMasterApiParsing.getShopCategoryDetailsArrayList().get(index).getId().trim();
                                                 dialog.dismiss();
@@ -507,7 +516,13 @@ public class AddSellerSubCatFragment extends SellerBaseFragment implements View.
                                         builder.setItems(suCatArray, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int item) {
                                                 txtSelectSubCat.setText(suCatArray[item]);
-                                                txtSelectBrand.setText("Brands");
+                                                if (txtSelectCategory.getText().toString().equals("Books")) {
+                                                    txtSelectBrand.setHint("Authors");
+                                                    etBrand.setHint("Type Authors Name");
+                                                } else {
+                                                    txtSelectBrand.setHint("Brands");
+                                                    etBrand.setHint("Type Brands Name");
+                                                }
                                                 int index = Arrays.asList(suCatArray).indexOf(suCatArray[item]);
                                                 subCatId = cityMasterParsing.getShopCategoryDetailsArrayList().get(index).getId().trim();
                                                 dialog.dismiss();
