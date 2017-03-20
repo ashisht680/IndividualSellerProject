@@ -855,7 +855,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
 
                         InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
                         photo = BitmapFactory.decodeStream(imageStream);
-                        photo = getResizedBitmap(photo, 900);
+                        photo = getResizedBitmap(photo, 1000);
                         photo = scaleImage(photo);
                         mImageView.setVisibility(View.VISIBLE);
                         mImageView.setImageBitmap(photo);
@@ -877,7 +877,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
 
                     InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
                     photo = BitmapFactory.decodeStream(imageStream);
-                    photo = getResizedBitmap(photo, 900);
+                    photo = getResizedBitmap(photo, 1000);
                     photo = scaleImage(photo);
                     mImageView.setVisibility(View.VISIBLE);
                     mImageView.setImageBitmap(photo);
