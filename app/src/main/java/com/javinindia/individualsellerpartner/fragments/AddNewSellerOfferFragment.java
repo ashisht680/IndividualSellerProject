@@ -11,14 +11,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
@@ -59,13 +63,21 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.javinindia.individualsellerpartner.utilitySeller.Utility.getOutputMediaFile;
+import static com.javinindia.individualsellerpartner.utilitySeller.Utility.getResizedBitmap;
+import static com.javinindia.individualsellerpartner.utilitySeller.Utility.scaleImage;
 
 /**
  * Created by Ashish on 15-09-2016.
@@ -156,20 +168,7 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
     }
 
     private void initToolbar(View view) {
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.onBackPressed();
-            }
-        });
-        final ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setTitle(null);
-        AppCompatTextView textView = (AppCompatTextView) view.findViewById(R.id.tittle);
-        textView.setText("Add offer");
-        textView.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
+        setToolbarTitle("Add offer");
     }
 
     @Override
@@ -310,7 +309,6 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
                 if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
                 }else {
-                    dialog.show();
                     dialog.show();
                 }
                 break;
@@ -759,12 +757,23 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
             public void onClick(DialogInterface dialog, int item) { // pick from
                 // camera
                 if (item == 0) {
-
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        mImageCaptureUri = FileProvider.getUriForFile(activity,
+                                "com.javinindia.individualsellerpartner.provider",
+                                getOutputMediaFile());
+
+
+                    } else {
+                        mImageCaptureUri = Uri.fromFile(getOutputMediaFile());
+                    }
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+                    startActivityForResult(intent, PICK_FROM_CAMERA);
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp1.jpg");
                     mImageCaptureUri = Uri.fromFile(f);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                    startActivityForResult(intent, PICK_FROM_CAMERA);
+                    startActivityForResult(intent, PICK_FROM_CAMERA);*/
 
                 } else {
                     // pick from file
@@ -776,6 +785,22 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
 
         dialog = builder.create();
     }
+
+  /*  private static File getOutputMediaFile() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "CameraDemo");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+    }*/
+
+
+
 
     public class CropOptionAdapter extends ArrayAdapter<CropOption> {
         private ArrayList<CropOption> mOptions;
@@ -823,7 +848,24 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
         switch (requestCode) {
             case PICK_FROM_CAMERA:
 
-                doCrop();
+               // doCrop();
+
+                if (outPutFile.exists()) {
+                    try {
+
+                        InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
+                        photo = BitmapFactory.decodeStream(imageStream);
+                        photo = getResizedBitmap(photo, 900);
+                        photo = scaleImage(photo);
+                        mImageView.setVisibility(View.VISIBLE);
+                        mImageView.setImageBitmap(photo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    Toast.makeText(activity, "Error while save image", Toast.LENGTH_SHORT).show();
+                }
 
                 break;
 
@@ -831,7 +873,18 @@ public class AddNewSellerOfferFragment extends SellerBaseFragment implements Vie
 
                 // After selecting image from files, save the selected path
                 mImageCaptureUri = data.getData();
-                doCrop();
+                try {
+
+                    InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
+                    photo = BitmapFactory.decodeStream(imageStream);
+                    photo = getResizedBitmap(photo, 900);
+                    photo = scaleImage(photo);
+                    mImageView.setVisibility(View.VISIBLE);
+                    mImageView.setImageBitmap(photo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+              //  doCrop();
                 break;
 
             case CROP_FROM_CAMERA:

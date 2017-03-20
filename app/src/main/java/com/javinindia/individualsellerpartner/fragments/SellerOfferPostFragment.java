@@ -87,26 +87,13 @@ public class SellerOfferPostFragment extends SellerBaseFragment implements View.
 
 
     private void initToolbar(View view) {
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.onBackPressed();
-            }
-        });
-        final ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setTitle(null);
-        AppCompatTextView textView = (AppCompatTextView) view.findViewById(R.id.tittle);
         if (!TextUtils.isEmpty(brandName)){
-            textView.setText(brandName);
+            setToolbarTitle(brandName);
         }else if (!TextUtils.isEmpty(shopName)){
-            textView.setText(shopName);
+            setToolbarTitle(shopName);
         }else {
-            textView.setText("Offer");
+            setToolbarTitle("Offer");
         }
-        textView.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
     }
 
     private void setDataOnView() {
@@ -221,6 +208,7 @@ public class SellerOfferPostFragment extends SellerBaseFragment implements View.
         txtFavCount.setTypeface(FontAsapRegularSingleTonClass.getInstance(activity).getTypeFace());
         imgBrand.setOnClickListener(this);
         btnRate.setOnClickListener(this);
+        imgOffer.setOnClickListener(this);
     }
 
     @Override
@@ -258,6 +246,20 @@ public class SellerOfferPostFragment extends SellerBaseFragment implements View.
                 break;
             case R.id.imgBrand:
                 activity.onBackPressed();
+                break;
+            case R.id.imgOffer:
+                ZoomImageFragment zoomImageFragment = new ZoomImageFragment();
+                Bundle bundle = new Bundle();
+
+                if (!TextUtils.isEmpty(offerPic)) {
+                    bundle.putString("img", offerPic);
+                } else if (!TextUtils.isEmpty(brandPic)) {
+                    bundle.putString("img", brandPic);
+                } else {
+                    bundle.putString("img", "");
+                }
+                zoomImageFragment.setArguments(bundle);
+                callFragmentMethod(zoomImageFragment, this.getClass().getSimpleName(), R.id.container);
                 break;
         }
     }

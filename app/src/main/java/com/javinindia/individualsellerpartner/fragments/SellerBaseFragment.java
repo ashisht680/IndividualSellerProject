@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -38,6 +40,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.javinindia.individualsellerpartner.R;
 import com.javinindia.individualsellerpartner.activity.SellerBaseActivity;
+import com.javinindia.individualsellerpartner.fontSeller.FontAsapRegularSingleTonClass;
+import com.javinindia.individualsellerpartner.utilitySeller.Utility;
 import com.javinindia.individualsellerpartner.volleycustomrequestSeller.CustomJSONObjectRequest;
 import com.javinindia.individualsellerpartner.volleycustomrequestSeller.CustomVolleyRequestQueue;
 
@@ -54,6 +58,7 @@ public abstract class SellerBaseFragment extends Fragment implements Response.Li
     public SellerBaseActivity activity;
     // For No internet Connection
     private Snackbar snackbar;
+    private String toolbarTitle;
 
     // BroadcastReceiver
     private NetworkConnected networkConnected;
@@ -69,6 +74,89 @@ public abstract class SellerBaseFragment extends Fragment implements Response.Li
             window.setStatusBarColor(Color.parseColor("#000000"));
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeToolBar();
+    }
+
+    //  ------------------------common toolbar start-------------------------//
+
+    public void initializeToolBar() {
+        if (isToolbarExist()) {
+            changeNavigationIcon();
+            changeTitle();
+        }
+    }
+    public boolean isToolbarExist() {
+        return (getView() != null && getView().findViewById(R.id.toolbar) != null);
+    }
+
+    private void changeNavigationIcon() {
+        if (isToolbarExist()) {
+            Toolbar toolbar = getToolbar();
+            int navigationIcon = R.drawable.ic_arrow_back_white;
+            if (navigationIcon != 0) {
+                toolbar.setNavigationIcon(navigationIcon);
+                attachNavigationIconListener(toolbar);
+            }
+        }
+    }
+
+    public Toolbar getToolbar() {
+        if (isToolbarExist()) {
+            return (Toolbar) getView().findViewById(R.id.toolbar);
+        }
+        return null;
+    }
+
+    protected void attachNavigationIconListener(Toolbar toolbar) {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onBackPressed();
+            }
+        });
+    }
+
+    private void changeTitle() {
+        changeTitle(getToolbarTitle());
+    }
+
+    public void changeTitle(String title) {
+        if (isToolbarExist()) {
+            if (!TextUtils.isEmpty(title)) {
+                getToolbar().setTitle(title);
+                getToolbar().setTitleTextColor(Utility.getColor(activity,android.R.color.white));
+                applyFontForToolbarTitle(activity);
+            }
+        }
+    }
+
+    public static void applyFontForToolbarTitle(Activity a){
+        Toolbar toolbar = (Toolbar) a.findViewById(R.id.toolbar);
+        for(int i = 0; i < toolbar.getChildCount(); i++){
+            View view = toolbar.getChildAt(i);
+            if(view instanceof TextView){
+                TextView tv = (TextView) view;
+                if(tv.getText().equals(a.getTitle())){
+                    tv.setTypeface(FontAsapRegularSingleTonClass.getInstance(a).getTypeFace());
+                    break;
+                }
+            }
+        }
+    }
+
+    public String getToolbarTitle() {
+        return toolbarTitle;
+    }
+
+    public void setToolbarTitle(String toolbarTitle) {
+        this.toolbarTitle = toolbarTitle;
+    }
+
+    /// --------------------------------------    commen toolbar end--------------------------------------------------------//
 
     @Override
     public void onAttach(Context context) {
