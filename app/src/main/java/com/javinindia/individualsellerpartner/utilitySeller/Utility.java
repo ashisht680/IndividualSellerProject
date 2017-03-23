@@ -230,7 +230,7 @@ public class Utility {
 
     public static final File getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraDemo");
+                Environment.DIRECTORY_PICTURES), "sale50Partner");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 return null;

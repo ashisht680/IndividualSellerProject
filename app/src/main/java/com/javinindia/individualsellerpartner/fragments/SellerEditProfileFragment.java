@@ -10,10 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,12 +23,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,6 +64,7 @@ import com.javinindia.individualsellerpartner.utilitySeller.Utility;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,17 +74,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
+import static com.javinindia.individualsellerpartner.utilitySeller.Utility.getOutputMediaFile;
+
 /**
  * Created by Ashish on 12-10-2016.
  */
 public class SellerEditProfileFragment extends SellerBaseFragment implements View.OnClickListener, SellerListShopProductCategoryFragment.OnCallBackCategoryListListener {
     private RequestQueue requestQueue;
 
-    ImageView imgProfilePic,imgProfilePicNotFound;
-    AppCompatEditText  etOwner, etEmailAddress, etMobile, etLandLine, etStoreNum, etState, etCity,etFloor;
+    ImageView imgProfilePic, imgProfilePicNotFound;
+    AppCompatEditText etOwner, etEmailAddress, etMobile, etLandLine, etStoreNum, etState, etCity, etFloor;
     //etStoreName,, etMall , etStartTime, etEndTime,
     RelativeLayout rlUpadteImg;
-    AppCompatTextView txtUpdate, txtOwnerHd, txtEmailHd, txtMobileHd, txtLandLineHd, txtStoreNumHd , txtStateHd, txtCityHd, txtFloorHd;
+    AppCompatTextView txtUpdate, txtOwnerHd, txtEmailHd, txtMobileHd, txtLandLineHd, txtStoreNumHd, txtStateHd, txtCityHd, txtFloorHd;
     // AppCompatTextView txtAddNewCategory; , txtTimingAbout txtMallHd,
 
     Calendar calendar;
@@ -95,12 +104,11 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
 
     private Uri mImageCaptureUri;
     private ImageView mImageView;
-    private android.app.AlertDialog dialog;
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
-    Bitmap photo=null;
+    Bitmap photo = null;
     String sPic;
     int size = 0;
     public static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
@@ -147,17 +155,16 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         sendDataOnRegistrationApi();
-        captureImageInitialization();
         outPutFile = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-       if (menu != null){
-           menu.findItem(R.id.action_changePass).setVisible(false);
-           menu.findItem(R.id.action_feedback).setVisible(false);
-       }
+        if (menu != null) {
+            menu.findItem(R.id.action_changePass).setVisible(false);
+            menu.findItem(R.id.action_feedback).setVisible(false);
+        }
     }
 
     private void initialize(View view) {
@@ -266,7 +273,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                             sStoreNum = shopViewResponse.getShopNum().trim();
                             sFloorNum = shopViewResponse.getFloor().trim();
                             if (!TextUtils.isEmpty(sName)) {
-                               // etStoreName.setText(Utility.fromHtml(sName));
+                                // etStoreName.setText(Utility.fromHtml(sName));
                             }
                             if (!TextUtils.isEmpty(oName)) {
                                 etOwner.setText(Utility.fromHtml(oName));
@@ -280,14 +287,14 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                             if (!TextUtils.isEmpty(sLandline)) {
                                 etLandLine.setText(Utility.fromHtml(sLandline));
                             }
-                            if (!TextUtils.isEmpty(sState)){
+                            if (!TextUtils.isEmpty(sState)) {
                                 etState.setText(Utility.fromHtml(sState));
                             }
-                            if (!TextUtils.isEmpty(sCity)){
+                            if (!TextUtils.isEmpty(sCity)) {
                                 etCity.setText(Utility.fromHtml(sCity));
                             }
                             if (!TextUtils.isEmpty(mName)) {
-                               // etMall.setText(Utility.fromHtml(mName));
+                                // etMall.setText(Utility.fromHtml(mName));
                             }
                             if (!TextUtils.isEmpty(sStoreNum)) {
                                 etStoreNum.setText(Utility.fromHtml(sStoreNum));
@@ -296,10 +303,10 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                                 etFloor.setText(Utility.fromHtml(sFloorNum));
                             }
                             if (!TextUtils.isEmpty(shopOpenTime)) {
-                               // etStartTime.setText(Utility.fromHtml(shopOpenTime));
+                                // etStartTime.setText(Utility.fromHtml(shopOpenTime));
                             }
                             if (!TextUtils.isEmpty(shopCloseTime)) {
-                               // etEndTime.setText(Utility.fromHtml(shopCloseTime));
+                                // etEndTime.setText(Utility.fromHtml(shopCloseTime));
                             }
                             if (!TextUtils.isEmpty(sPic))
                                 Utility.imageLoadGlideLibraryPic(activity, imgProfilePicNotFound, imgProfilePic, sPic);
@@ -366,8 +373,8 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
             case R.id.rlUpadteImg:
                 if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
-                }else {
-                    dialog.show();
+                } else {
+                    methodAddImages();
                 }
                 break;
             case R.id.etState:
@@ -386,7 +393,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
     private void methodUpdateView() {
         String open = "open time";
         String close = "close time";
-       // String store = etStoreName.getText().toString().trim();
+        // String store = etStoreName.getText().toString().trim();
         String store = "store name";
         String owner = etOwner.getText().toString().trim();
         String email = etEmailAddress.getText().toString().trim();
@@ -397,13 +404,14 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
         String floor = etFloor.getText().toString().trim();
         /*if (TextUtils.isEmpty(store)) {
             Toast.makeText(activity, "Please write Store name", Toast.LENGTH_LONG).show();
-        } else*/ if (TextUtils.isEmpty(owner)) {
+        } else*/
+        if (TextUtils.isEmpty(owner)) {
             Toast.makeText(activity, "Please write Owner name", Toast.LENGTH_LONG).show();
         } else if (TextUtils.isEmpty(email)) {
             Toast.makeText(activity, "Please write email", Toast.LENGTH_LONG).show();
         } else if (TextUtils.isEmpty(mobile)) {
             Toast.makeText(activity, "Please write Mobile number", Toast.LENGTH_LONG).show();
-        }else if (TextUtils.isEmpty(floor)) {
+        } else if (TextUtils.isEmpty(floor)) {
             Toast.makeText(activity, "Please write pincode", Toast.LENGTH_LONG).show();
         }/* else if (TextUtils.isEmpty(mall)) {
             Toast.makeText(activity, "Please write Mall", Toast.LENGTH_LONG).show();
@@ -458,7 +466,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                             banner = shopViewResponse.getBanner().trim();
                             saveDataOnPreference(sEmail, sName, mLat, mLong, sID, sPic, oName);
                             onCallBackEditProfile.OnCallBackEditProfile();
-                           // activity.onBackPressed();
+                            // activity.onBackPressed();
                         } else {
                             if (!TextUtils.isEmpty(msg)) {
                                 showDialogMethod(msg);
@@ -496,10 +504,10 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                     byte[] data = bos.toByteArray();
                     String encodedImage = Base64.encodeToString(data, Base64.DEFAULT);
                     params.put("shopProfilePic", encodedImage + "image/jpeg");
-                    params.put("action","new");
+                    params.put("action", "new");
                 } else {
                     params.put("shopProfilePic", sPic);
-                    params.put("action","old");
+                    params.put("action", "old");
                 }
                 return params;
             }
@@ -566,7 +574,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                         if (i == 0) {
                             //etStartTime.setText(hourOfDay + ":" + minute + format);
                         } else {
-                           // etEndTime.setText(hourOfDay + ":" + minute + format);
+                            // etEndTime.setText(hourOfDay + ":" + minute + format);
                         }
 
                     }
@@ -606,7 +614,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
                                         public void onClick(DialogInterface dialog, int item) {
                                             etState.setText(stateArray[item]);
                                             etCity.setText("");
-                                          //  etMall.setText("");
+                                            //  etMall.setText("");
                                         }
                                     });
                                     builder.create();
@@ -759,7 +767,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("state",etState.getText().toString().trim());
+                params.put("state", etState.getText().toString().trim());
                 params.put("city", etCity.getText().toString().trim());
                 return params;
             }
@@ -777,45 +785,39 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
         onCallBackEditProfile.OnCallBackEditProfile();
     }
 
-    private void captureImageInitialization() {
-        final String[] items = new String[]{"Take from camera",
-                "Select from gallery"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
-                android.R.layout.select_dialog_item, items);
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
-
-        builder.setTitle("Select Image");
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) { // pick from
-                // camera
-                if (item == 0) {
+    private void methodAddImages() {
+        final CharSequence[] options = {"Take from camera", "Select from gallery", "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take from camera")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    mImageCaptureUri = Uri.fromFile(getOutputMediaFile());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        File imagePath = new File(Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES), "sale50Partner");
+                        File newFile = new File(imagePath, "temp.jpg");
+                        outPutFile = newFile;
+                        mImageCaptureUri = FileProvider.getUriForFile(activity, "com.javinindia.individualsellerpartner.fileprovider", newFile);
+                        activity.grantUriPermission("com.android.camera", mImageCaptureUri,
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    } else {
+                        mImageCaptureUri = Uri.fromFile(getOutputMediaFile());
+                    }
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
                     startActivityForResult(intent, PICK_FROM_CAMERA);
-
-                } else {
-                    // pick from file
+                } else if (options[item].equals("Select from gallery")) {
                     Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(i, PICK_FROM_FILE);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
                 }
             }
         });
-
-        dialog = builder.create();
-    }
-
-    private static File getOutputMediaFile() {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraDemo");
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_" + timeStamp + ".jpg");
+        builder.show();
     }
 
 
@@ -902,6 +904,7 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
     }
 
     private void doCrop() {
+
         final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
@@ -915,6 +918,8 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
             return;
         } else {
             intent.setData(mImageCaptureUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.putExtra("outputX", 512);
             intent.putExtra("outputY", 512);
             intent.putExtra("aspectX", 1);
@@ -982,9 +987,9 @@ public class SellerEditProfileFragment extends SellerBaseFragment implements Vie
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    dialog.show();
-                    //return;
-                }else {
+                    methodAddImages();
+                    return;
+                } else {
                     Toast.makeText(activity, "You Denied for camera permission so you cant't update image", Toast.LENGTH_SHORT).show();
                 }
             }

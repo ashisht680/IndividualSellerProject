@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
@@ -108,7 +109,6 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
 
     private Uri mImageCaptureUri;
     private ImageView mImageView,imgOfferPicNotFound;
-    private android.app.AlertDialog dialog;
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
@@ -178,7 +178,6 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
         initialize(view);
         setDateMethod();
         tempId = Utility.getRandomNumberInRange(10000000, 999999999);
-        captureImageInitialization();
         outPutFile = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
         return view;
     }
@@ -340,7 +339,7 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
                 if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
                 }else {
-                    dialog.show();
+                   methodAddImages();
                 }
                 break;
         }
@@ -719,25 +718,17 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
     }
 
     private void methodAddImages() {
-        dialog.show();
-    }
-
-    private void captureImageInitialization() {
-        final String[] items = new String[]{"Take from camera",
-                "Select from gallery"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
-                android.R.layout.select_dialog_item, items);
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
-
-        builder.setTitle("Select Image");
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) { // pick from
-                // camera
-                if (item == 0) {
+        final CharSequence[] options = {"Take from camera", "Select from gallery", "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take from camera")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         mImageCaptureUri = FileProvider.getUriForFile(activity,
-                                "com.javinindia.individualsellerpartner.provider",
+                                "com.javinindia.individualsellerpartner.fileprovider",
                                 getOutputMediaFile());
 
 
@@ -746,21 +737,16 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
                     }
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
                     startActivityForResult(intent, PICK_FROM_CAMERA);
-                  /*  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp1.jpg");
-                    mImageCaptureUri = Uri.fromFile(f);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                    startActivityForResult(intent, PICK_FROM_CAMERA);*/
-
-                } else {
-                    // pick from file
+                } else if (options[item].equals("Select from gallery")) {
                     Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(i, PICK_FROM_FILE);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
                 }
             }
         });
-
-        dialog = builder.create();
+        builder.show();
     }
 
 
@@ -818,7 +804,7 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
                         InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
                         photo = BitmapFactory.decodeStream(imageStream);
                         photo = getResizedBitmap(photo, 900);
-                        photo = scaleImage(photo);
+                       // photo = scaleImage(photo);
                         mImageView.setVisibility(View.VISIBLE);
                         imgOfferPicNotFound.setImageBitmap(photo);
                         mImageView.setImageBitmap(photo);
@@ -841,7 +827,7 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
                     InputStream imageStream = activity.getContentResolver().openInputStream(mImageCaptureUri);
                     photo = BitmapFactory.decodeStream(imageStream);
                     photo = getResizedBitmap(photo, 900);
-                    photo = scaleImage(photo);
+                   // photo = scaleImage(photo);
                     mImageView.setVisibility(View.VISIBLE);
                     imgOfferPicNotFound.setImageBitmap(photo);
                     mImageView.setImageBitmap(photo);
@@ -985,8 +971,8 @@ public class SellerUpdateOfferFragment extends SellerBaseFragment implements Vie
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    dialog.show();
-                    //return;
+                    methodAddImages();
+                    return;
                 }else {
                     Toast.makeText(activity, "You Denied for camera permission so you cant't update image", Toast.LENGTH_SHORT).show();
                 }
